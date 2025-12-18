@@ -15,8 +15,18 @@ public class Aicodehelper {
     @Resource
     private ChatModel openaiChatModel; // auto-configured by the OpenAI starter
 
+
+    // Simple conversation
     public String chat(String message) {
         UserMessage userMessage = UserMessage.from(message);
+        ChatResponse chatResponse = openaiChatModel.chat(userMessage);
+        AiMessage aiMessage = chatResponse.aiMessage();
+        log.info("AI output: {}", aiMessage.text());
+        return aiMessage.text();
+    }
+
+    //
+    public String chatwithMessage(UserMessage userMessage) {
         ChatResponse chatResponse = openaiChatModel.chat(userMessage);
         AiMessage aiMessage = chatResponse.aiMessage();
         log.info("AI output: {}", aiMessage.text());
