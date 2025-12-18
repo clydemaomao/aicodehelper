@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: aicodehelper
+  profiles:
+    active: local
+langchain4j:
+  open-ai:
+    chat-model:
+      api-key: demo
+      base-url: http://langchain4j.dev/demo/openai/v1
+      model-name: gpt-4o-mini
