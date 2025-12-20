@@ -9,3 +9,11 @@ langchain4j:
       api-key: demo
       base-url: http://langchain4j.dev/demo/openai/v1
       model-name: gpt-4o-mini
+    streaming-chat-model:
+      model-name: qwen-max
+      api-key: <Your API Key>
+    embedding-model:
+      model-name: text-embedding-v4
+      api-key: <Your API Key>
+bigmodel:
+  api-key: <Your API Key>

@@ -11,7 +11,8 @@ import dev.langchain4j.data.message.TextContent;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.data.message.TextContent;
 import dev.langchain4j.data.message.ImageContent;
-
+import dev.langchain4j.data.message.UserMessage;
+import com.linqi.aicodehelper.ai.Aicodehelper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,7 +26,7 @@ class AicodehelperChatIntegrationTest {
     //Simple conversation 
     @Test
     void chat() {
-        String reply = aiCodeHelper.chat("Hello,My name is LInqi");
+        String reply = aiCodeHelper.chat("Hello,My name is LInqi,im a developer and I need your help");
         assertThat(reply).isNotBlank();
         System.out.println("AI reply: " + reply);
     }
@@ -40,4 +41,7 @@ class AicodehelperChatIntegrationTest {
         );
         aiCodeHelper.chatwithMessage(userMessage);
     }
+
+
+    
 }
