@@ -6,7 +6,7 @@ import com.linqi.aicodehelper.ai.tools.Interview;
 
 import org.springframework.context.annotation.Bean;
 
-import dev.langchain4j.mcp.McpToolProvider;
+// import dev.langchain4j.mcp.McpToolProvider;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
@@ -22,11 +22,13 @@ public class AicodehelperServiceFactory {
     @Resource
     private ChatModel openaiChatModel; // auto-configured by the OpenAI starter
 
-    @Resource
-    private StreamingChatModel openaiStreamingChatModel;
+    //@Resource
+    //private StreamingChatModel openaiStreamingChatModel;
 
+    /*
     @Resource
     private McpToolProvider mcpToolProvider;
+    */
 
     
 

@@ -16,9 +16,9 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 /**
- * 加载 RAG
+ * load RAG related beans
  */
-@Configuration
+// @Configuration
 public class RagConfig {
 
     @Resource
@@ -27,6 +27,7 @@ public class RagConfig {
     @Resource
     private EmbeddingStore<TextSegment> embeddingStore;
 
+    /*
     @Bean
     public ContentRetriever contentRetriever() {
         // ------ RAG ------
@@ -53,4 +54,5 @@ public class RagConfig {
                 .build();
         return contentRetriever;
     }
+    */
 }

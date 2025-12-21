@@ -11,15 +11,17 @@ public interface AicodehelperService {
     @SystemMessage(fromResource = "system_prompt.txt")
     String chat(String userMessage);
 
-    @SystemMessage(fromResource = "system-prompt.txt")
+    @SystemMessage(fromResource = "system_prompt.txt")
     Report chatForReport(String userMessage);
 
     // Study report
+    @SystemMessage(fromResource = "system_prompt.txt")
     record Report(String name, List<String> suggestionList) {
     }
 
     // streaming response
-    Flux<String> chatStream(@MemoryId int memoryId, @UserMessage String userMessage);
+    //@SystemMessage(fromResource = "system-prompt.txt")
+    //Flux<String> chatStream(@MemoryId int memoryId, @UserMessage String userMessage);
 
 }
 

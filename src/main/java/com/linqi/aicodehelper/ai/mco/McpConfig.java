@@ -15,6 +15,7 @@ public class McpConfig {
     @Value("${bigmodel.api-key}")
     private String apiKey;
 
+    /*
     @Bean
     public McpToolProvider mcpToolProvider() {
         // communication transport
@@ -34,4 +35,5 @@ public class McpConfig {
                 .build();
         return toolProvider;
     }
+    */
 }
