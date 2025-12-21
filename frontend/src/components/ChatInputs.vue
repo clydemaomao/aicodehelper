@@ -34,7 +34,7 @@ export default {
     },
     placeholder: {
       type: String,
-      default: '请输入您的问题...'
+      default: 'Type your question...'
     }
   },
   data() {
@@ -141,13 +141,13 @@ export default {
   .chat-input {
     padding: 15px;
   }
-  
+
   .input-container {
     gap: 8px;
   }
-  
+
   .input-textarea {
-    font-size: 16px; /* 防止在移动设备上自动缩放 */
+    font-size: 16px;
   }
 }
-</style> 
+</style>

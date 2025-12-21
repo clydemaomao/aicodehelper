@@ -1,31 +1,27 @@
 <template>
   <div class="app">
-    <!-- 头部标题 -->
     <div class="app-header">
-      <h1 class="app-title">AI 编程小助手</h1>
-      <div class="app-subtitle">帮助您解答编程学习和求职面试相关问题</div>
+      <h1 class="app-title">AI Code Helper</h1>
+      <div class="app-subtitle">Help with learning, coding, and interview prep.</div>
     </div>
 
-    <!-- 聊天区域 -->
     <div class="chat-container">
-      <!-- 消息列表 -->
       <div class="messages-container" ref="messagesContainer">
         <div v-if="messages.length === 0" class="welcome-message">
           <div class="welcome-content">
-            <div class="welcome-icon">🤖</div>
-            <h2>glad you choose me!</h2>
-            <p>i can help you with</p>
+            <div class="welcome-icon">AI</div>
+            <h2>Glad you chose me!</h2>
+            <p>I can help you with:</p>
             <ul>
-              <li>answer programming questions</li>
-              <li>giving examples of code and explanations</li>
-              <li>assistance with interview</li>
-              <li>share programming advice</li>
+              <li>Answering programming questions</li>
+              <li>Explaining code with examples</li>
+              <li>Interview preparation</li>
+              <li>Sharing practical tips</li>
             </ul>
-            <p>please ask me any time！</p>
+            <p>Please ask anytime.</p>
           </div>
         </div>
 
-        <!-- 历史消息 -->
         <ChatMessage
           v-for="message in messages"
           :key="message.id"
@@ -34,7 +30,6 @@
           :timestamp="message.timestamp"
         />
 
-        <!-- AI 正在回复的消息 -->
         <div v-if="isAiTyping" class="chat-message ai-message">
           <div class="message-avatar">
             <div class="avatar ai-avatar">AI</div>
@@ -42,7 +37,7 @@
           <div class="message-content">
             <div class="message-bubble">
               <div class="ai-typing-content">
-                <div class="ai-response-text message-markdown" v-html="currentAiResponseRendered"></div>
+                <div class="ai-response-text">Thinking...</div>
                 <LoadingDots v-if="isStreaming" />
               </div>
             </div>
@@ -50,19 +45,17 @@
         </div>
       </div>
 
-      <!-- 输入框 -->
       <ChatInput
         :disabled="isAiTyping"
         @send-message="sendMessage"
-        placeholder="enter your question here..."
+        placeholder="Type your question here..."
       />
     </div>
 
-    <!-- 连接状态提示 -->
     <div v-if="connectionError" class="connection-error">
       <div class="error-content">
-        <span class="error-icon">⚠️</span>
-        <span>connection failed, please check if the backend service is running</span>
+        <span class="error-icon">!</span>
+        <span>Connection failed. Please check the backend service.</span>
       </div>
     </div>
   </div>
@@ -70,11 +63,9 @@
 
 <script>
 import ChatMessage from './components/ChatMessage.vue'
-import ChatInput from './components/ChatInput.vue'
+import ChatInput from './components/ChatInputs.vue'
 import LoadingDots from './components/LoadingDots.vue'
-import { chatWithSSE } from './api/chatApi.js'
-import { generateMemoryId } from './utils/index.js'
-import { marked } from 'marked'
+import { chat } from './api/chatApi.js'
 
 export default {
   name: 'App',
@@ -86,39 +77,17 @@ export default {
   data() {
     return {
       messages: [],
-      memoryId: null,
       isAiTyping: false,
       isStreaming: false,
-      currentAiResponse: '',
-      currentEventSource: null,
       connectionError: false
-    }
-  },
-  computed: {
-    currentAiResponseRendered() {
-      if (!this.currentAiResponse) return ''
-      // 配置marked选项
-      marked.setOptions({
-        breaks: true, // 支持换行
-        gfm: true, // 支持GitHub风格的Markdown
-        sanitize: false, // 不过滤HTML（根据需要可以开启）
-        highlight: function(code, lang) {
-          // 可以在这里添加代码高亮功能
-          return code
-        }
-      })
-      return marked(this.currentAiResponse)
     }
   },
   methods: {
     sendMessage(message) {
-      // 添加用户消息
       this.addMessage(message, true)
-      
-      // 开始AI回复
       this.startAiResponse(message)
     },
-    
+
     addMessage(content, isUser = false) {
       const message = {
         id: Date.now() + Math.random(),
@@ -129,70 +98,28 @@ export default {
       this.messages.push(message)
       this.scrollToBottom()
     },
-    
-    startAiResponse(userMessage) {
+
+    async startAiResponse(userMessage) {
       this.isAiTyping = true
       this.isStreaming = true
-      this.currentAiResponse = ''
       this.connectionError = false
-      
-      // 关闭之前的连接
-      if (this.currentEventSource) {
-        this.currentEventSource.close()
-      }
-      
-      // 开始SSE连接
-      this.currentEventSource = chatWithSSE(
-        this.memoryId,
-        userMessage,
-        this.handleAiMessage,
-        this.handleAiError,
-        this.handleAiClose
-      )
-    },
-    
-    handleAiMessage(data) {
-      this.currentAiResponse += data
-      this.scrollToBottom()
-    },
-    
-    handleAiError(error) {
-      console.error('AI 回复出错:', error)
-      this.connectionError = true
-      this.finishAiResponse()
-      
-      // 5秒后自动隐藏错误提示
-      setTimeout(() => {
-        this.connectionError = false
-      }, 5000)
-    },
-    
-    handleAiClose() {
-      this.finishAiResponse()
-    },
-    
-    finishAiResponse() {
-      this.isStreaming = false
-      
-      // 如果有内容，添加到消息列表
-      if (this.currentAiResponse.trim()) {
-        this.addMessage(this.currentAiResponse.trim(), false)
-      }
-      
-      // 重置状态
-      this.isAiTyping = false
-      this.currentAiResponse = ''
-      
-      // 重置连接错误状态（确保正常结束时清除错误提示）
-      this.connectionError = false
-      
-      // 关闭连接
-      if (this.currentEventSource) {
-        this.currentEventSource.close()
-        this.currentEventSource = null
+      try {
+        const reply = await chat(userMessage)
+        if (reply && reply.trim()) {
+          this.addMessage(reply.trim(), false)
+        }
+      } catch (error) {
+        console.error('AI response error:', error)
+        this.connectionError = true
+        setTimeout(() => {
+          this.connectionError = false
+        }, 5000)
+      } finally {
+        this.isStreaming = false
+        this.isAiTyping = false
       }
     },
-    
+
     scrollToBottom() {
       this.$nextTick(() => {
         const container = this.$refs.messagesContainer
@@ -200,22 +127,6 @@ export default {
           container.scrollTop = container.scrollHeight
         }
       })
-    },
-    
-    initializeChat() {
-      this.memoryId = generateMemoryId()
-      console.log('聊天室ID:', this.memoryId)
-    }
-  },
-  
-  mounted() {
-    this.initializeChat()
-  },
-  
-  beforeUnmount() {
-    // 组件销毁前关闭连接
-    if (this.currentEventSource) {
-      this.currentEventSource.close()
     }
   }
 }
@@ -301,7 +212,6 @@ export default {
   margin-bottom: 5px;
 }
 
-/* AI 正在回复时的消息样式 */
 .chat-message {
   display: flex;
   margin-bottom: 20px;
@@ -362,7 +272,6 @@ export default {
   line-height: 1.5;
 }
 
-/* AI实时回复的Markdown样式 */
 .ai-response-text.message-markdown h1,
 .ai-response-text.message-markdown h2,
 .ai-response-text.message-markdown h3,
@@ -488,7 +397,6 @@ export default {
   }
 }
 
-/* 滚动条样式 */
 .messages-container::-webkit-scrollbar {
   width: 6px;
 }
@@ -510,25 +418,25 @@ export default {
   .app-header {
     padding: 15px;
   }
-  
+
   .app-title {
     font-size: 20px;
   }
-  
+
   .messages-container {
     padding: 15px 0;
   }
-  
+
   .welcome-content {
     padding: 0 10px;
   }
-  
+
   .message-content {
     max-width: 85%;
   }
-  
+
   .chat-message {
     padding: 0 10px;
   }
 }
-</style> 
+</style>
