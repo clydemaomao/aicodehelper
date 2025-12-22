@@ -14,6 +14,7 @@ Instead of theory walls, I assemble a focused product and learn the core pattern
 ## Preview
 
 [Watch the demo](docs/demo.mp4)
+<img width="2559" height="1267" alt="image" src="https://github.com/user-attachments/assets/da9114e2-0b54-469b-af38-09d988642c2a" />
 
 
 
