@@ -15,7 +15,7 @@ Instead of theory walls, I assemble a focused product and learn the core pattern
 
 [Watch the demo](docs/demo.mp4)
 
-> Place your video at `docs/demo.mp4`. GitHub will show this as a link; use a GIF or a thumbnail if you want an inline preview.
+
 
 This project touches chat memory, structured outputs, tool calls, RAG and MCP scaffolding, guardrails, and logging-friendly workflows from zero to one.
 
